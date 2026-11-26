@@ -36,6 +36,9 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+
+
+
 @Composable
 fun Neart_ProjectApp() {
     // One ViewModel shared by all three screens, so they all see the same data
@@ -44,21 +47,31 @@ fun Neart_ProjectApp() {
 
     NavigationSuiteScaffold(
         navigationSuiteItems = {
-            AppDestinations.entries.forEach {
-                item(
-                    icon = {
-                        Icon(
-                            painterResource(it.icon),
-                            contentDescription = it.label
-                        )
-                    },
-                    label = { Text(it.label) },
-                    selected = it == currentDestination,
-                    onClick = { currentDestination = it }
-                )
-            }
+            item(
+                icon = { Icon(painterResource(R.drawable.ic_history), contentDescription = "History") },
+                label = { Text("History") },
+                selected = currentDestination == AppDestinations.HISTORY,
+                onClick = { currentDestination = AppDestinations.HISTORY }
+            )
+            item(
+                icon = { Icon(painterResource(R.drawable.ic_dumbbell), contentDescription = "Log") },
+                label = { Text("Log") },
+                selected = currentDestination == AppDestinations.LOG,
+                onClick = { currentDestination = AppDestinations.LOG }
+            )
+            item(
+                icon = { Icon(painterResource(R.drawable.ic_stats), contentDescription = "Stats") },
+                label = { Text("Stats") },
+                selected = currentDestination == AppDestinations.STATS,
+                onClick = { currentDestination = AppDestinations.STATS }
+            )
         }
-    ) {
+    )
+
+
+
+
+    {
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
             // Show the screen for whichever tab is selected
             when (currentDestination) {
@@ -80,6 +93,8 @@ fun Neart_ProjectApp() {
         }
     }
 }
+
+
 
 enum class AppDestinations(
     val label: String,

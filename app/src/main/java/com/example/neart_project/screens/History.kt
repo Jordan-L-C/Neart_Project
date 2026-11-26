@@ -1,5 +1,6 @@
 package com.example.neart_project.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,8 +15,12 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -60,7 +65,7 @@ fun HistoryScreen(
                         val isPb = personalBests.any {
                             it.exercise == lift.exercise && it.bestWeight == lift.weightKg
                         }
-                        LiftCard(lift, isPb)
+                        SwipeableLiftCard(lift, isPb, onDelete = { viewModel.deleteLift(lift) })
                     }
                 }
             }
@@ -111,5 +116,34 @@ fun LiftCard(lift: Lift, isPb: Boolean) {
                 }
             }
         }
+    }
+}
+
+@Composable
+fun SwipeableLiftCard(lift: Lift, isPb: Boolean, onDelete: () -> Unit) {
+    val dismissState = rememberSwipeToDismissBoxState()
+
+    LaunchedEffect(dismissState.currentValue) {
+        if (dismissState.currentValue == SwipeToDismissBoxValue.EndToStart) {
+            onDelete()
+        }
+    }
+
+    SwipeToDismissBox(
+        state = dismissState,
+        enableDismissFromStartToEnd = false,
+        backgroundContent = {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.errorContainer)
+                    .padding(horizontal = 16.dp),
+                contentAlignment = Alignment.CenterEnd
+            ) {
+                Text("Delete")
+            }
+        }
+    ) {
+        LiftCard(lift, isPb)
     }
 }

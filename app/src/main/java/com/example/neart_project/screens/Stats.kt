@@ -60,14 +60,14 @@ fun StatsScreen(
             Text("Log a lift to see your personal bests.")
         } else {
             // One card per exercise: name on the left, best weight on the right
-            LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) { //LazyColumn only loads items that are visible on the screen
                 items(personalBests, key = { it.exercise }) { pb ->
                     Card(modifier = Modifier.fillMaxWidth()) {
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(16.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween
+                            horizontalArrangement = Arrangement.SpaceBetween // Exercise on the left, weight on the right
                         ) {
                             Text(pb.exercise, style = MaterialTheme.typography.bodyLarge)
                             Text(
