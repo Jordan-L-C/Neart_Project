@@ -17,10 +17,12 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewScreenSizes
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.neart_project.screens.HistoryScreen
+import com.example.neart_project.screens.LogScreen
+import com.example.neart_project.screens.StatsScreen
 import com.example.neart_project.ui.theme.Neart_ProjectTheme
+import com.example.neart_project.viewmodel.LiftViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,10 +36,11 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@PreviewScreenSizes
 @Composable
 fun Neart_ProjectApp() {
-    var currentDestination by rememberSaveable { mutableStateOf(AppDestinations.HOME) }
+    // One ViewModel shared by all three screens, so they all see the same data
+    val viewModel: LiftViewModel = viewModel()
+    var currentDestination by rememberSaveable { mutableStateOf(AppDestinations.HISTORY) }
 
     NavigationSuiteScaffold(
         navigationSuiteItems = {
@@ -57,10 +60,23 @@ fun Neart_ProjectApp() {
         }
     ) {
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-            Greeting(
-                name = "Android",
-                modifier = Modifier.padding(innerPadding)
-            )
+            // Show the screen for whichever tab is selected
+            when (currentDestination) {
+                AppDestinations.HISTORY -> HistoryScreen(
+                    viewModel = viewModel,
+                    onAddClick = { currentDestination = AppDestinations.LOG },
+                    modifier = Modifier.padding(innerPadding)
+                )
+                AppDestinations.LOG -> LogScreen(
+                    viewModel = viewModel,
+                    onSaved = { currentDestination = AppDestinations.HISTORY },
+                    modifier = Modifier.padding(innerPadding)
+                )
+                AppDestinations.STATS -> StatsScreen(
+                    viewModel = viewModel,
+                    modifier = Modifier.padding(innerPadding)
+                )
+            }
         }
     }
 }
@@ -69,23 +85,7 @@ enum class AppDestinations(
     val label: String,
     val icon: Int,
 ) {
-    HOME("Home", R.drawable.ic_home),
-    FAVORITES("Favorites", R.drawable.ic_favorite),
-    PROFILE("Profile", R.drawable.ic_account_box),
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    Neart_ProjectTheme {
-        Greeting("Android")
-    }
+    HISTORY("History", R.drawable.ic_history),
+    LOG("Log", R.drawable.ic_dumbbell),
+    STATS("Stats", R.drawable.ic_stats),
 }
