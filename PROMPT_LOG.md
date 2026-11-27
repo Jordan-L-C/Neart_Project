@@ -65,3 +65,17 @@ This document logs user prompts, AI assistant responses, architectural decisions
     - **`History.kt`**: Live list collection, PB badge logic, why `LazyColumn` items are keyed by `id`, and how the `SwipeToDismissBox` + `LaunchedEffect` delete works.
     - **`Log.kt`**: Add vs. edit modes, `rememberSaveable(liftToEdit)` form state, weight validation, `copy()` keeping the original id for updates, and the reusable stateless `DropdownField`.
     - **`Stats.kt`**: Where personal bests come from, and the placeholder quote card that will later use the quote API.
+
+---
+
+### Entry 6: Quote of the Day API (Retrofit)
+- **User Prompt**: *"Please walk me through implementing a quote API on the Stats screen, so that a motivational quote of the day is displayed."*
+- **Summary / Resolution**:
+  - Chose the free ZenQuotes API (`https://zenquotes.io/api/today`), which needs no API key and returns one quote per day as JSON.
+  - **Dependencies**: Added Retrofit 3.0.0 and its Gson converter to `libs.versions.toml` and `app/build.gradle.kts`.
+  - **`AndroidManifest.xml`**: Added the `INTERNET` permission so the app can make network requests.
+  - **`data/QuoteApi.kt`**:
+    - `Quote` data class (`q` = quote text, `a` = author) matching the API's JSON field names so Gson can convert the response automatically.
+    - `QuoteApi` Retrofit interface with a `suspend` `@GET("api/today")` function, plus a single shared `service` instance created with `by lazy`.
+  - **`LiftViewModel.kt`**: Added a `quote` state (`mutableStateOf<Quote?>`) that is fetched once in `init` using `viewModelScope.launch`, wrapped in `try/catch` so having no internet can't crash the app.
+  - **`Stats.kt`**: The quote card now shows the API quote and its author, falling back to the original hardcoded quote while loading or when offline.

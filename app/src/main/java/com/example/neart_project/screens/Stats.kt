@@ -43,7 +43,10 @@ fun StatsScreen(
     ) {
         Text("Stats", style = MaterialTheme.typography.headlineMedium)
 
-        // Quote of the day card - text will come from the quote API later
+        // Quote of the day from the API (see QuoteApi). Null while loading or with no internet
+        val quote = viewModel.quote
+
+        // Quote of the day card
         Card(
             modifier = Modifier.fillMaxWidth(),
             colors = CardDefaults.cardColors(
@@ -53,10 +56,15 @@ fun StatsScreen(
             Column(modifier = Modifier.padding(16.dp)) {
                 Text("Quote of the day", style = MaterialTheme.typography.labelLarge)
                 Text(
-                    "\"The only bad workout is the one that didn't happen.\"",
+                    // Show the API quote, or a default one if it hasn't loaded
+                    "\"${quote?.q ?: "The only bad workout is the one that didn't happen."}\"",
                     style = MaterialTheme.typography.bodyLarge,
                     fontStyle = FontStyle.Italic
                 )
+                // Author, only shown when the quote came from the API
+                if (quote != null) {
+                    Text("- ${quote.a}", style = MaterialTheme.typography.bodyMedium)
+                }
             }
         }
 
