@@ -26,11 +26,18 @@ import com.example.neart_project.screens.StatsScreen
 import com.example.neart_project.ui.theme.Neart_ProjectTheme
 import com.example.neart_project.viewmodel.LiftViewModel
 
+/**
+ * MainActivity - where the app starts.
+ * There's only one Activity; it shows the Compose UI and switches between the three screens.
+ */
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Let the app draw right up to the edges of the screen (behind the status bar)
         enableEdgeToEdge()
+        // Everything inside setContent is the app's UI
         setContent {
+            // Apply the app's colours and fonts (from ui/theme)
             Neart_ProjectTheme {
                 Neart_ProjectApp()
             }
@@ -39,17 +46,28 @@ class MainActivity : ComponentActivity() {
 }
 
 
-
-
+/**
+ * Neart_ProjectApp - holds the navigation bar and decides which screen to show.
+ *
+ * currentDestination stores the selected tab. When it changes, Compose redraws
+ * and shows the matching screen.
+ */
 @Composable
 fun Neart_ProjectApp() {
     // One ViewModel shared by all three screens, so they all see the same data
     val viewModel: LiftViewModel = viewModel()
+
+    // The selected tab. rememberSaveable keeps it when the phone is rotated. Starts on History
     var currentDestination by rememberSaveable { mutableStateOf(AppDestinations.HISTORY) }
+
+    // The lift being edited, or null if adding a new one.
+    // Set when a card is tapped on History, then given to the Log screen
     var editingLift by remember { mutableStateOf<Lift?>(null) }
 
+    // Navigation bar: shows at the bottom on phones, and on the side on bigger screens
     NavigationSuiteScaffold(
         navigationSuiteItems = {
+            // One item per tab. Tapping one changes the selected tab
             item(
                 icon = { Icon(painterResource(R.drawable.ic_history), contentDescription = "History") },
                 label = { Text("History") },
@@ -61,6 +79,7 @@ fun Neart_ProjectApp() {
                 label = { Text("Log") },
                 selected = currentDestination == AppDestinations.LOG,
                 onClick = {
+                    // Opening Log from the nav bar is always for a new lift, so clear any edit
                     editingLift = null
                     currentDestination = AppDestinations.LOG
                 }
@@ -73,20 +92,22 @@ fun Neart_ProjectApp() {
             )
         }
     )
-
-
-
-
+    // The screen content
     {
+        // innerPadding stops the screens being hidden behind the system bars
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-            // Show the screen for whichever tab is selected
+            // Show the screen for the selected tab.
+            // The screens don't switch tabs themselves - they call these functions
+            // (onAddClick, onEdit, onSaved) and this code changes the tab
             when (currentDestination) {
                 AppDestinations.HISTORY -> HistoryScreen(
                     viewModel = viewModel,
+                    // "+" tapped: open Log with an empty form
                     onAddClick = {
                         editingLift = null
                         currentDestination = AppDestinations.LOG
                     },
+                    // Card tapped: open Log with that lift filled in
                     onEdit = { lift ->
                         editingLift = lift
                         currentDestination = AppDestinations.LOG
@@ -95,7 +116,8 @@ fun Neart_ProjectApp() {
                 )
                 AppDestinations.LOG -> LogScreen(
                     viewModel = viewModel,
-                    liftToEdit = editingLift,
+                    liftToEdit = editingLift,   // null = new lift
+                    // After saving, go back to History
                     onSaved = {
                         editingLift = null
                         currentDestination = AppDestinations.HISTORY
@@ -112,7 +134,7 @@ fun Neart_ProjectApp() {
 }
 
 
-
+// The three tabs, each with a name and an icon (icons are in res/drawable)
 enum class AppDestinations(
     val label: String,
     val icon: Int,

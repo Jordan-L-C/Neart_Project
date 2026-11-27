@@ -30,18 +30,28 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.neart_project.data.Lift
 import com.example.neart_project.viewmodel.LiftViewModel
 
-// Shows 100.0 as "100" but keeps 62.5 as "62.5"
+/**
+ * History screen - a list of every logged lift, newest first.
+ *
+ * - Lifts that are a personal best get a "PB" badge
+ * - Swipe a card left to delete it
+ * - Tap a card to edit it (opens the Log screen)
+ * - The "+" button logs a new lift
+ */
+
+// Shows 100.0 as "100" but keeps 62.5 as "62.5". Also used on the Log and Stats screens
 fun formatWeight(weight: Double): String =
     if (weight % 1.0 == 0.0) weight.toInt().toString() else weight.toString()
 
 @Composable
 fun HistoryScreen(
     viewModel: LiftViewModel,
-    onAddClick: () -> Unit,
-    onEdit: (Lift) -> Unit,
+    onAddClick: () -> Unit,     // "+" tapped - MainActivity opens the Log screen
+    onEdit: (Lift) -> Unit,     // card tapped - MainActivity opens the Log screen with this lift
     modifier: Modifier = Modifier
 ) {
-    // Live data from the database - the screen redraws whenever it changes
+    // Get the lifts and personal bests from the ViewModel.
+    // The screen redraws automatically whenever they change
     val lifts by viewModel.lifts.collectAsStateWithLifecycle()
     val personalBests by viewModel.personalBests.collectAsStateWithLifecycle()
 
@@ -56,12 +66,13 @@ fun HistoryScreen(
             if (lifts.isEmpty()) {
                 Text("No lifts yet. Tap + to log your first lift.")
             } else {
+                // LazyColumn is a scrolling list that only draws the cards you can see
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     // Space at the bottom so the + button doesn't cover the last card
                     contentPadding = PaddingValues(bottom = 80.dp)
                 ) {
-                    // key = id so Compose tracks each lift correctly when the list changes
+                    // key = id helps Compose keep track of each card when one is deleted
                     items(lifts, key = { it.id }) { lift ->
                         // It's a PB if it matches the best weight for that exercise
                         val isPb = personalBests.any {
@@ -89,7 +100,7 @@ fun HistoryScreen(
     }
 }
 
-// One lift in the list
+// One lift card: exercise name and details on the left, PB badge on the right
 @Composable
 fun LiftCard(lift: Lift, isPb: Boolean) {
     Card(modifier = Modifier.fillMaxWidth()) {
@@ -102,6 +113,7 @@ fun LiftCard(lift: Lift, isPb: Boolean) {
         ) {
             Column {
                 Text(lift.exercise, style = MaterialTheme.typography.titleMedium)
+                // e.g. "100 kg · 3x5 · Chest"
                 Text(
                     "${formatWeight(lift.weightKg)} kg · ${lift.sets}x${lift.reps} · ${lift.muscleGroup}",
                     style = MaterialTheme.typography.bodyMedium
@@ -125,6 +137,7 @@ fun LiftCard(lift: Lift, isPb: Boolean) {
     }
 }
 
+// A LiftCard that can be swiped left to delete, or tapped to edit
 @Composable
 fun SwipeableLiftCard(
     lift: Lift,
@@ -132,8 +145,10 @@ fun SwipeableLiftCard(
     onDelete: () -> Unit,
     onClick: () -> Unit
 ) {
+    // Keeps track of the swipe
     val dismissState = rememberSwipeToDismissBoxState()
 
+    // When the card has been swiped all the way left, delete the lift
     LaunchedEffect(dismissState.currentValue) {
         if (dismissState.currentValue == SwipeToDismissBoxValue.EndToStart) {
             onDelete()
@@ -142,7 +157,8 @@ fun SwipeableLiftCard(
 
     SwipeToDismissBox(
         state = dismissState,
-        enableDismissFromStartToEnd = false,
+        enableDismissFromStartToEnd = false,   // only allow swiping left
+        // Red "Delete" area shown behind the card as it slides away
         backgroundContent = {
             Box(
                 modifier = Modifier
@@ -155,6 +171,7 @@ fun SwipeableLiftCard(
             }
         }
     ) {
+        // The card itself - tapping it opens it for editing
         Box(modifier = Modifier.clickable { onClick() }) {
             LiftCard(lift, isPb)
         }

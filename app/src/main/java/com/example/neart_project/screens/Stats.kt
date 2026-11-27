@@ -21,12 +21,18 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.neart_project.viewmodel.LiftViewModel
 
+/**
+ * Stats screen - a quote of the day and your personal best for each exercise.
+ *
+ * Personal bests come from the ViewModel, so this list updates by itself
+ * when lifts are added, edited or deleted on the other screens.
+ */
 @Composable
 fun StatsScreen(
     viewModel: LiftViewModel,
     modifier: Modifier = Modifier
 ) {
-    // Live personal bests from the database
+    // Get the personal bests from the ViewModel (redraws when they change)
     val personalBests by viewModel.personalBests.collectAsStateWithLifecycle()
 
     Column(

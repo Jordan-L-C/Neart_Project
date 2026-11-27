@@ -50,3 +50,18 @@ This document logs user prompts, AI assistant responses, architectural decisions
     - **MainActivity**: Managed `editingLift` state and passed the selected lift to `LogScreen`.
     - **LogScreen Form State**: Updated form fields (`exercise`, `muscleGroup`, `weight`, `sets`, `reps`) using `rememberSaveable(liftToEdit)` so existing data pre-populates when editing.
     - **Database Update Logic**: Configured save button to call `viewModel.updateLift(...)` when `liftToEdit != null`, or `viewModel.addLift(...)` when creating a new record.
+
+---
+
+### Entry 5: Code Documentation Comments
+- **User Prompt**: *"Please add clear comments to everything outlining important features and how it interacts with other files."*
+- **Summary / Resolution**:
+  - Added explanatory comments across all main source files without changing any code behaviour:
+    - **`Lift.kt`**: Entity/table mapping, auto-generated primary key, and how `date` is used for sorting and kept when a lift is edited.
+    - **`LiftDao.kt`**: Why reads return `Flow` (automatic UI updates) and writes are `suspend` (no database work on the main thread), how the personal bests SQL query works, and which ViewModel function calls each operation.
+    - **`AppDatabase.kt`**: Singleton pattern, `@Volatile`/`synchronized`, use of `applicationContext`, and what the schema `version` means for future migrations.
+    - **`LiftViewModel.kt`**: Its role in MVVM between the screens and the DAO, how `stateIn`/`WhileSubscribed(5000)` turns Room Flows into `StateFlow`, and how `viewModelScope` coroutines handle writes.
+    - **`MainActivity.kt`**: State-based navigation, the shared ViewModel, state hoisting through callbacks (`onAddClick`, `onEdit`, `onSaved`), `editingLift` for edit mode, and the adaptive `NavigationSuiteScaffold`.
+    - **`History.kt`**: Live list collection, PB badge logic, why `LazyColumn` items are keyed by `id`, and how the `SwipeToDismissBox` + `LaunchedEffect` delete works.
+    - **`Log.kt`**: Add vs. edit modes, `rememberSaveable(liftToEdit)` form state, weight validation, `copy()` keeping the original id for updates, and the reusable stateless `DropdownField`.
+    - **`Stats.kt`**: Where personal bests come from, and the placeholder quote card that will later use the quote API.

@@ -30,30 +30,41 @@ import androidx.compose.ui.unit.dp
 import com.example.neart_project.data.Lift
 import com.example.neart_project.viewmodel.LiftViewModel
 
+/**
+ * Log screen - a form to add a new lift or edit an existing one.
+ *
+ * - liftToEdit is null: empty form, saving adds a new lift
+ * - liftToEdit has a lift: form is filled in, saving updates that lift
+ *
+ * After saving, onSaved() tells MainActivity to go back to History.
+ */
 @Composable
 fun LogScreen(
     viewModel: LiftViewModel,
-    onSaved: () -> Unit,
+    onSaved: () -> Unit,          // called after saving
     modifier: Modifier = Modifier,
-    liftToEdit: Lift? = null
+    liftToEdit: Lift? = null      // the lift tapped on History, or null for a new lift
 ) {
-    // Fixed lists of choices
+    // The choices for the dropdowns and chips. Fixed lists keep exercise names
+    // spelled the same every time, so personal bests group correctly
     val exercises = listOf("Bench Press", "Squat", "Deadlift", "Overhead Press", "Barbell Row")
     val muscleGroups = listOf("Chest", "Back", "Legs", "Arms")
-    val numbers = (1..10).map { it.toString() }
+    val numbers = (1..10).map { it.toString() }   // "1" to "10" for sets and reps
 
-    // State: what the user has picked or typed so far (populated from liftToEdit if editing)
+    // What the user has picked or typed so far.
+    // If editing, each field starts with the lift's value; otherwise it uses a default (after ?:).
+    // rememberSaveable keeps the values when the phone is rotated
     var exercise by rememberSaveable(liftToEdit) { mutableStateOf(liftToEdit?.exercise ?: exercises[0]) }
     var muscleGroup by rememberSaveable(liftToEdit) { mutableStateOf(liftToEdit?.muscleGroup ?: muscleGroups[0]) }
     var weight by rememberSaveable(liftToEdit) { mutableStateOf(liftToEdit?.let { formatWeight(it.weightKg) } ?: "") }
     var sets by rememberSaveable(liftToEdit) { mutableStateOf(liftToEdit?.sets?.toString() ?: "3") }
     var reps by rememberSaveable(liftToEdit) { mutableStateOf(liftToEdit?.reps?.toString() ?: "5") }
-    var showError by rememberSaveable(liftToEdit) { mutableStateOf(false) }
+    var showError by rememberSaveable(liftToEdit) { mutableStateOf(false) }   // true if the weight is invalid
 
     Column(
         modifier = modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
+            .verticalScroll(rememberScrollState())   // lets the form scroll on small screens
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
@@ -68,7 +79,7 @@ fun LogScreen(
             modifier = Modifier.fillMaxWidth()
         )
 
-        // Muscle group chips - tapping one selects it
+        // Muscle group chips - tap one to select it
         Text("Muscle group", style = MaterialTheme.typography.labelLarge)
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             muscleGroups.forEach { group ->
@@ -85,17 +96,17 @@ fun LogScreen(
             value = weight,
             onValueChange = {
                 weight = it
-                showError = false
+                showError = false   // hide the error once the user starts typing again
             },
             label = { Text("Weight (kg)") },
             isError = showError,
             supportingText = { if (showError) Text("Enter a weight above 0") },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),   // number keyboard
             singleLine = true,
             modifier = Modifier.fillMaxWidth()
         )
 
-        // Sets and reps side by side
+        // Sets and reps side by side, each taking half the width
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             DropdownField(
                 label = "Sets",
@@ -115,11 +126,14 @@ fun LogScreen(
 
         Button(
             onClick = {
+                // Turn the weight text into a number (null if it isn't a valid number)
                 val weightKg = weight.toDoubleOrNull()
                 if (weightKg == null || weightKg <= 0) {
                     showError = true          // invalid: show error, don't save
                 } else {
                     if (liftToEdit != null) {
+                        // Editing: copy() keeps the same id and date, and changes the rest.
+                        // The id is how the database knows which lift to update
                         viewModel.updateLift(
                             liftToEdit.copy(
                                 exercise = exercise,
@@ -130,6 +144,7 @@ fun LogScreen(
                             )
                         )
                     } else {
+                        // New lift
                         viewModel.addLift(exercise, muscleGroup, weightKg, sets.toInt(), reps.toInt())
                     }
                     weight = ""               // clear the form for next time
@@ -143,7 +158,8 @@ fun LogScreen(
     }
 }
 
-// Reusable dropdown: used for exercise, sets and reps
+// Reusable dropdown, used for exercise, sets and reps.
+// The screen tells it what's selected, and it reports back what the user picks (onSelect)
 @Composable
 fun DropdownField(
     label: String,
@@ -152,9 +168,10 @@ fun DropdownField(
     onSelect: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var expanded by remember { mutableStateOf(false) }
+    var expanded by remember { mutableStateOf(false) }   // is the menu open?
 
     Box(modifier = modifier) {
+        // Shows the current choice. readOnly so the user can't type in it
         OutlinedTextField(
             value = selected,
             onValueChange = { },
@@ -169,6 +186,7 @@ fun DropdownField(
                 .matchParentSize()
                 .clickable { expanded = true }
         )
+        // The menu of options. Closes when the user taps outside it
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false }
