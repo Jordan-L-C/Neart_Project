@@ -69,12 +69,16 @@ fun Neart_ProjectApp() {
         navigationSuiteItems = {
             // One item per tab. Tapping one changes the selected tab
             item(
+                // Accessibility: TalkBack (screen reader) reads "History" for this icon,
+                // so users who can't see the screen know this tab opens their lift history
                 icon = { Icon(painterResource(R.drawable.ic_history), contentDescription = "History") },
                 label = { Text("History") },
                 selected = currentDestination == AppDestinations.HISTORY,
                 onClick = { currentDestination = AppDestinations.HISTORY }
             )
             item(
+                // Accessibility: TalkBack reads "Log" for the dumbbell icon, so users know
+                // this tab opens the form for logging a new lift
                 icon = { Icon(painterResource(R.drawable.ic_dumbbell), contentDescription = "Log") },
                 label = { Text("Log") },
                 selected = currentDestination == AppDestinations.LOG,
@@ -85,6 +89,8 @@ fun Neart_ProjectApp() {
                 }
             )
             item(
+                // Accessibility: TalkBack reads "Stats" for this icon, so users know
+                // this tab shows their personal bests and the quote of the day
                 icon = { Icon(painterResource(R.drawable.ic_stats), contentDescription = "Stats") },
                 label = { Text("Stats") },
                 selected = currentDestination == AppDestinations.STATS,

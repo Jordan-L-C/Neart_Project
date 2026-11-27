@@ -79,3 +79,17 @@ This document logs user prompts, AI assistant responses, architectural decisions
     - `QuoteApi` Retrofit interface with a `suspend` `@GET("api/today")` function, plus a single shared `service` instance created with `by lazy`.
   - **`LiftViewModel.kt`**: Added a `quote` state (`mutableStateOf<Quote?>`) that is fetched once in `init` using `viewModelScope.launch`, wrapped in `try/catch` so having no internet can't crash the app.
   - **`Stats.kt`**: The quote card now shows the API quote and its author, falling back to the original hardcoded quote while loading or when offline.
+
+---
+
+### Entry 7: Accessibility Features Document
+- **User Prompt**: *"Please create a text document similar to the prompt log outlining the accessibility features I have implemented so it is easier to demo."*
+- **Summary / Resolution**:
+  - Created `ACCESSIBILITY.md` in the project root, listing each implemented accessibility feature with a short explanation and the matching code example:
+    1. Labelled navigation icons (`contentDescription` for TalkBack)
+    2. Labelled form fields
+    3. Errors not shown by colour alone (red field plus a written message)
+    4. Readable colour contrast from Material Theme Builder (`primary`/`onPrimary` pairs)
+    5. Text that scales with the user's font size (`sp` typography and a scrollable form)
+    6. Minimal typing (dropdowns, chips and a number keyboard)
+    7. Clear empty states on the History and Stats screens

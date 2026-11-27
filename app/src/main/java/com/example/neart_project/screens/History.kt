@@ -121,15 +121,21 @@ fun LiftCard(lift: Lift, isPb: Boolean) {
             }
             // PB badge, only shown on personal bests
             if (isPb) {
+                // Surface = a small coloured box behind the "PB" text
                 Surface(
+                    // primary is the app's main colour from the theme. Using the strongest colour
+                    // makes personal bests stand out from the plain cards around them
                     color = MaterialTheme.colorScheme.primary,
-                    shape = MaterialTheme.shapes.small
+                    shape = MaterialTheme.shapes.small   // rounded corners, from the theme
                 ) {
                     Text(
+                        // Accessibility: the badge uses the text "PB", not just a colour, so
+                        // colour-blind users can still spot it and TalkBack reads it out
                         "PB",
+                        // Accessibility: onPrimary is the colour made to go on top of primary - Theme Builder picks the pair so the text always has enough contrast to be readable, in both light and dark mode
                         color = MaterialTheme.colorScheme.onPrimary,
-                        style = MaterialTheme.typography.labelMedium,
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
+                        style = MaterialTheme.typography.labelMedium,   // small label text that still scales with the phone's font size
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)   // space around the text inside the badge
                     )
                 }
             }
@@ -163,10 +169,14 @@ fun SwipeableLiftCard(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
+                    // errorContainer is the theme's soft red, used for warnings and destructive
+                    // actions. Red is widely recognised as "danger", so users know this removes the lift
                     .background(MaterialTheme.colorScheme.errorContainer)
                     .padding(horizontal = 16.dp),
-                contentAlignment = Alignment.CenterEnd
+                contentAlignment = Alignment.CenterEnd   // text on the right, where the swipe reveals it
             ) {
+                // Accessibility: the word "Delete" is shown, not just the red colour,
+                // so colour-blind users still know what the swipe does
                 Text("Delete")
             }
         }
