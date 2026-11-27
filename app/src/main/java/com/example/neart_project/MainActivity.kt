@@ -18,6 +18,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.neart_project.data.Lift
 import com.example.neart_project.screens.HistoryScreen
@@ -71,16 +72,16 @@ fun Neart_ProjectApp() {
             item(
                 // Accessibility: TalkBack (screen reader) reads "History" for this icon,
                 // so users who can't see the screen know this tab opens their lift history
-                icon = { Icon(painterResource(R.drawable.ic_history), contentDescription = "History") },
-                label = { Text("History") },
+                icon = { Icon(painterResource(R.drawable.ic_history), contentDescription = stringResource(R.string.history)) },
+                label = { Text(stringResource(R.string.history)) },
                 selected = currentDestination == AppDestinations.HISTORY,
                 onClick = { currentDestination = AppDestinations.HISTORY }
             )
             item(
                 // Accessibility: TalkBack reads "Log" for the dumbbell icon, so users know
                 // this tab opens the form for logging a new lift
-                icon = { Icon(painterResource(R.drawable.ic_dumbbell), contentDescription = "Log") },
-                label = { Text("Log") },
+                icon = { Icon(painterResource(R.drawable.ic_dumbbell), contentDescription = stringResource(R.string.log)) },
+                label = { Text(stringResource(R.string.log)) },
                 selected = currentDestination == AppDestinations.LOG,
                 onClick = {
                     // Opening Log from the nav bar is always for a new lift, so clear any edit
@@ -91,8 +92,8 @@ fun Neart_ProjectApp() {
             item(
                 // Accessibility: TalkBack reads "Stats" for this icon, so users know
                 // this tab shows their personal bests and the quote of the day
-                icon = { Icon(painterResource(R.drawable.ic_stats), contentDescription = "Stats") },
-                label = { Text("Stats") },
+                icon = { Icon(painterResource(R.drawable.ic_stats), contentDescription = stringResource(R.string.stats)) },
+                label = { Text(stringResource(R.string.stats)) },
                 selected = currentDestination == AppDestinations.STATS,
                 onClick = { currentDestination = AppDestinations.STATS }
             )

@@ -1,0 +1,23 @@
+<resources>
+    <!-- Irish (Gaeilge) translations. Android uses this file automatically when the phone or app language is set to Irish -->
+    <string name="app_name">Neart_Project</string>
+    <string name="history">Stair</string>
+    <string name="log">Logáil</string>
+    <string name="stats">Staitisticí</string>
+    <string name="no_lifts_yet_tap_to_log_your_first_lift">Níl aon ardú logáilte fós. Tapáil + chun do chéad ardú a logáil.</string>
+    <string name="delete">Scrios</string>
+    <string name="quote_of_the_day">Sliocht an lae</string>
+    <string name="the_only_bad_workout_is_the_one_that_didn_t_happen">Níl ach seisiún aclaíochta amháin go dona: an ceann nár tharla.</string>
+    <string name="personal_bests">Na torthaí is fearr agat</string>
+    <string name="log_a_lift_to_see_your_personal_bests">Logáil ardú chun na torthaí is fearr agat a fheiceáil.</string>
+    <string name="edit_lift">Cuir an t-ardú in eagar</string>
+    <string name="log_lift">Logáil ardú</string>
+    <string name="exercise">Cleachtadh</string>
+    <string name="muscle_group">Grúpa matán</string>
+    <string name="weight_kg">Meáchan (kg)</string>
+    <string name="enter_a_weight_above_0">Cuir isteach meáchan os cionn 0</string>
+    <string name="sets">Tacair</string>
+    <string name="reps">Athdhéanaimh</string>
+    <string name="update_lift">Nuashonraigh an t-ardú</string>
+    <string name="save_lift">Sábháil an t-ardú</string>
+</resources>

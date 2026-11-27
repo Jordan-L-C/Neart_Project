@@ -25,8 +25,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.neart_project.R
 import com.example.neart_project.data.Lift
 import com.example.neart_project.viewmodel.LiftViewModel
 
@@ -61,10 +63,10 @@ fun HistoryScreen(
             modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Text("History", style = MaterialTheme.typography.headlineMedium)
+            Text(stringResource(R.string.history), style = MaterialTheme.typography.headlineMedium)
 
             if (lifts.isEmpty()) {
-                Text("No lifts yet. Tap + to log your first lift.")
+                Text(stringResource(R.string.no_lifts_yet_tap_to_log_your_first_lift))
             } else {
                 // LazyColumn is a scrolling list that only draws the cards you can see
                 LazyColumn(
@@ -177,7 +179,7 @@ fun SwipeableLiftCard(
             ) {
                 // Accessibility: the word "Delete" is shown, not just the red colour,
                 // so colour-blind users still know what the swipe does
-                Text("Delete")
+                Text(stringResource(R.string.delete))
             }
         }
     ) {

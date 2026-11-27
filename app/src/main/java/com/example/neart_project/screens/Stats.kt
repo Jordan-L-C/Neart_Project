@@ -15,10 +15,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.neart_project.R
 import com.example.neart_project.viewmodel.LiftViewModel
 
 /**
@@ -41,7 +43,7 @@ fun StatsScreen(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        Text("Stats", style = MaterialTheme.typography.headlineMedium)
+        Text(stringResource(R.string.stats), style = MaterialTheme.typography.headlineMedium)
 
         // Reference: GenAi see prompt(s) (6) in report - quote card below
         // Quote of the day from the API (see QuoteApi). Null while loading or with no internet
@@ -55,10 +57,10 @@ fun StatsScreen(
             )
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
-                Text("Quote of the day", style = MaterialTheme.typography.labelLarge)
+                Text(stringResource(R.string.quote_of_the_day), style = MaterialTheme.typography.labelLarge)
                 Text(
                     // Show the API quote, or a default one if it hasn't loaded
-                    "\"${quote?.q ?: "The only bad workout is the one that didn't happen."}\"",
+                    "\"${quote?.q ?: stringResource(R.string.the_only_bad_workout_is_the_one_that_didn_t_happen)}\"",
                     style = MaterialTheme.typography.bodyLarge,
                     fontStyle = FontStyle.Italic
                 )
@@ -69,10 +71,10 @@ fun StatsScreen(
             }
         }
 
-        Text("Personal bests", style = MaterialTheme.typography.titleMedium)
+        Text(stringResource(R.string.personal_bests), style = MaterialTheme.typography.titleMedium)
 
         if (personalBests.isEmpty()) {
-            Text("Log a lift to see your personal bests.")
+            Text(stringResource(R.string.log_a_lift_to_see_your_personal_bests))
         } else {
             // One card per exercise: name on the left, best weight on the right
             LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) { //LazyColumn only loads items that are visible on the screen

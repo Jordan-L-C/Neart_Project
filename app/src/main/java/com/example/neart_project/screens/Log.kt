@@ -25,8 +25,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.example.neart_project.R
 import com.example.neart_project.data.Lift
 import com.example.neart_project.viewmodel.LiftViewModel
 
@@ -68,11 +70,11 @@ fun LogScreen(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        Text(if (liftToEdit != null) "Edit Lift" else "Log Lift", style = MaterialTheme.typography.headlineMedium)
+        Text(stringResource(if (liftToEdit != null) R.string.edit_lift else R.string.log_lift), style = MaterialTheme.typography.headlineMedium)
 
         // Exercise dropdown
         DropdownField(
-            label = "Exercise",
+            label = stringResource(R.string.exercise),
             selected = exercise,
             options = exercises,
             onSelect = { exercise = it },
@@ -80,7 +82,7 @@ fun LogScreen(
         )
 
         // Muscle group chips - tap one to select it
-        Text("Muscle group", style = MaterialTheme.typography.labelLarge)
+        Text(stringResource(R.string.muscle_group), style = MaterialTheme.typography.labelLarge)
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             muscleGroups.forEach { group ->
                 FilterChip(
@@ -98,9 +100,9 @@ fun LogScreen(
                 weight = it
                 showError = false   // hide the error once the user starts typing again
             },
-            label = { Text("Weight (kg)") },
+            label = { Text(stringResource(R.string.weight_kg)) },
             isError = showError,
-            supportingText = { if (showError) Text("Enter a weight above 0") },
+            supportingText = { if (showError) Text(stringResource(R.string.enter_a_weight_above_0)) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),   // number keyboard
             singleLine = true,
             modifier = Modifier.fillMaxWidth()
@@ -109,14 +111,14 @@ fun LogScreen(
         // Sets and reps side by side, each taking half the width
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             DropdownField(
-                label = "Sets",
+                label = stringResource(R.string.sets),
                 selected = sets,
                 options = numbers,
                 onSelect = { sets = it },
                 modifier = Modifier.weight(1f)
             )
             DropdownField(
-                label = "Reps",
+                label = stringResource(R.string.reps),
                 selected = reps,
                 options = numbers,
                 onSelect = { reps = it },
@@ -153,7 +155,7 @@ fun LogScreen(
             },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(if (liftToEdit != null) "Update lift" else "Save lift")
+            Text(stringResource(if (liftToEdit != null) R.string.update_lift else R.string.save_lift))
         }
     }
 }

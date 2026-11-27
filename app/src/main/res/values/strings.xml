@@ -1,3 +1,22 @@
 <resources>
     <string name="app_name">Neart_Project</string>
+    <string name="history">History</string>
+    <string name="log">Log</string>
+    <string name="stats">Stats</string>
+    <string name="no_lifts_yet_tap_to_log_your_first_lift">No lifts yet. Tap + to log your first lift.</string>
+    <string name="delete">Delete</string>
+    <string name="quote_of_the_day">Quote of the day</string>
+    <string name="the_only_bad_workout_is_the_one_that_didn_t_happen">The only bad workout is the one that didn\'t happen.</string>
+    <string name="personal_bests">Personal bests</string>
+    <string name="log_a_lift_to_see_your_personal_bests">Log a lift to see your personal bests.</string>
+    <string name="edit_lift">Edit Lift</string>
+    <string name="log_lift">Log Lift</string>
+    <string name="exercise">Exercise</string>
+    <string name="muscle_group">Muscle group</string>
+    <string name="weight_kg">Weight (kg)</string>
+    <string name="enter_a_weight_above_0">Enter a weight above 0</string>
+    <string name="sets">Sets</string>
+    <string name="reps">Reps</string>
+    <string name="update_lift">Update lift</string>
+    <string name="save_lift">Save lift</string>
 </resources>
