@@ -27,26 +27,28 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.example.neart_project.data.Lift
 import com.example.neart_project.viewmodel.LiftViewModel
 
 @Composable
 fun LogScreen(
     viewModel: LiftViewModel,
     onSaved: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    liftToEdit: Lift? = null
 ) {
     // Fixed lists of choices
     val exercises = listOf("Bench Press", "Squat", "Deadlift", "Overhead Press", "Barbell Row")
     val muscleGroups = listOf("Chest", "Back", "Legs", "Arms")
     val numbers = (1..10).map { it.toString() }
 
-    // State: what the user has picked or typed so far
-    var exercise by rememberSaveable { mutableStateOf(exercises[0]) }
-    var muscleGroup by rememberSaveable { mutableStateOf(muscleGroups[0]) }
-    var weight by rememberSaveable { mutableStateOf("") }
-    var sets by rememberSaveable { mutableStateOf("3") }
-    var reps by rememberSaveable { mutableStateOf("5") }
-    var showError by rememberSaveable { mutableStateOf(false) }
+    // State: what the user has picked or typed so far (populated from liftToEdit if editing)
+    var exercise by rememberSaveable(liftToEdit) { mutableStateOf(liftToEdit?.exercise ?: exercises[0]) }
+    var muscleGroup by rememberSaveable(liftToEdit) { mutableStateOf(liftToEdit?.muscleGroup ?: muscleGroups[0]) }
+    var weight by rememberSaveable(liftToEdit) { mutableStateOf(liftToEdit?.let { formatWeight(it.weightKg) } ?: "") }
+    var sets by rememberSaveable(liftToEdit) { mutableStateOf(liftToEdit?.sets?.toString() ?: "3") }
+    var reps by rememberSaveable(liftToEdit) { mutableStateOf(liftToEdit?.reps?.toString() ?: "5") }
+    var showError by rememberSaveable(liftToEdit) { mutableStateOf(false) }
 
     Column(
         modifier = modifier
@@ -55,7 +57,7 @@ fun LogScreen(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        Text("Log Lift", style = MaterialTheme.typography.headlineMedium)
+        Text(if (liftToEdit != null) "Edit Lift" else "Log Lift", style = MaterialTheme.typography.headlineMedium)
 
         // Exercise dropdown
         DropdownField(
@@ -117,14 +119,26 @@ fun LogScreen(
                 if (weightKg == null || weightKg <= 0) {
                     showError = true          // invalid: show error, don't save
                 } else {
-                    viewModel.addLift(exercise, muscleGroup, weightKg, sets.toInt(), reps.toInt())
+                    if (liftToEdit != null) {
+                        viewModel.updateLift(
+                            liftToEdit.copy(
+                                exercise = exercise,
+                                muscleGroup = muscleGroup,
+                                weightKg = weightKg,
+                                sets = sets.toInt(),
+                                reps = reps.toInt()
+                            )
+                        )
+                    } else {
+                        viewModel.addLift(exercise, muscleGroup, weightKg, sets.toInt(), reps.toInt())
+                    }
                     weight = ""               // clear the form for next time
                     onSaved()                 // go back to History
                 }
             },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Save lift")
+            Text(if (liftToEdit != null) "Update lift" else "Save lift")
         }
     }
 }

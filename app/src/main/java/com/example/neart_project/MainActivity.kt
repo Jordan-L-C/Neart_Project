@@ -13,11 +13,13 @@ import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.neart_project.data.Lift
 import com.example.neart_project.screens.HistoryScreen
 import com.example.neart_project.screens.LogScreen
 import com.example.neart_project.screens.StatsScreen
@@ -44,6 +46,7 @@ fun Neart_ProjectApp() {
     // One ViewModel shared by all three screens, so they all see the same data
     val viewModel: LiftViewModel = viewModel()
     var currentDestination by rememberSaveable { mutableStateOf(AppDestinations.HISTORY) }
+    var editingLift by remember { mutableStateOf<Lift?>(null) }
 
     NavigationSuiteScaffold(
         navigationSuiteItems = {
@@ -57,7 +60,10 @@ fun Neart_ProjectApp() {
                 icon = { Icon(painterResource(R.drawable.ic_dumbbell), contentDescription = "Log") },
                 label = { Text("Log") },
                 selected = currentDestination == AppDestinations.LOG,
-                onClick = { currentDestination = AppDestinations.LOG }
+                onClick = {
+                    editingLift = null
+                    currentDestination = AppDestinations.LOG
+                }
             )
             item(
                 icon = { Icon(painterResource(R.drawable.ic_stats), contentDescription = "Stats") },
@@ -77,12 +83,23 @@ fun Neart_ProjectApp() {
             when (currentDestination) {
                 AppDestinations.HISTORY -> HistoryScreen(
                     viewModel = viewModel,
-                    onAddClick = { currentDestination = AppDestinations.LOG },
+                    onAddClick = {
+                        editingLift = null
+                        currentDestination = AppDestinations.LOG
+                    },
+                    onEdit = { lift ->
+                        editingLift = lift
+                        currentDestination = AppDestinations.LOG
+                    },
                     modifier = Modifier.padding(innerPadding)
                 )
                 AppDestinations.LOG -> LogScreen(
                     viewModel = viewModel,
-                    onSaved = { currentDestination = AppDestinations.HISTORY },
+                    liftToEdit = editingLift,
+                    onSaved = {
+                        editingLift = null
+                        currentDestination = AppDestinations.HISTORY
+                    },
                     modifier = Modifier.padding(innerPadding)
                 )
                 AppDestinations.STATS -> StatsScreen(

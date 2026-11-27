@@ -1,6 +1,7 @@
 package com.example.neart_project.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -37,6 +38,7 @@ fun formatWeight(weight: Double): String =
 fun HistoryScreen(
     viewModel: LiftViewModel,
     onAddClick: () -> Unit,
+    onEdit: (Lift) -> Unit,
     modifier: Modifier = Modifier
 ) {
     // Live data from the database - the screen redraws whenever it changes
@@ -65,7 +67,11 @@ fun HistoryScreen(
                         val isPb = personalBests.any {
                             it.exercise == lift.exercise && it.bestWeight == lift.weightKg
                         }
-                        SwipeableLiftCard(lift, isPb, onDelete = { viewModel.deleteLift(lift) })
+                        SwipeableLiftCard(
+                            lift, isPb,
+                            onDelete = { viewModel.deleteLift(lift) },
+                            onClick = { onEdit(lift) }
+                        )
                     }
                 }
             }
@@ -120,7 +126,12 @@ fun LiftCard(lift: Lift, isPb: Boolean) {
 }
 
 @Composable
-fun SwipeableLiftCard(lift: Lift, isPb: Boolean, onDelete: () -> Unit) {
+fun SwipeableLiftCard(
+    lift: Lift,
+    isPb: Boolean,
+    onDelete: () -> Unit,
+    onClick: () -> Unit
+) {
     val dismissState = rememberSwipeToDismissBoxState()
 
     LaunchedEffect(dismissState.currentValue) {
@@ -144,6 +155,8 @@ fun SwipeableLiftCard(lift: Lift, isPb: Boolean, onDelete: () -> Unit) {
             }
         }
     ) {
-        LiftCard(lift, isPb)
+        Box(modifier = Modifier.clickable { onClick() }) {
+            LiftCard(lift, isPb)
+        }
     }
 }
