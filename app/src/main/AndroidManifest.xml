@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Reference: GenAi see prompt(s) (6) in report -->
     <!-- Needed to get the quote of the day from the internet -->
     <uses-permission android:name="android.permission.INTERNET" />
 

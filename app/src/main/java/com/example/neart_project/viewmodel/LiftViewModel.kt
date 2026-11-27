@@ -42,6 +42,7 @@ class LiftViewModel(application: Application) : AndroidViewModel(application) {
     val personalBests: StateFlow<List<PersonalBest>> = dao.getPersonalBests()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
+    // Reference: GenAi see prompt(s) (6) in report - quote property and init block below
     // Quote of the day from the internet (used on Stats). null until it has loaded,
     // or if there's no internet. private set means only this class can change it
     var quote by mutableStateOf<Quote?>(null)

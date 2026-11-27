@@ -43,6 +43,7 @@ fun StatsScreen(
     ) {
         Text("Stats", style = MaterialTheme.typography.headlineMedium)
 
+        // Reference: GenAi see prompt(s) (6) in report - quote card below
         // Quote of the day from the API (see QuoteApi). Null while loading or with no internet
         val quote = viewModel.quote
 

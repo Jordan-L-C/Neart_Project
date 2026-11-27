@@ -4,6 +4,8 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 
+// Reference: GenAi see prompt(s) (6) in report - whole file
+
 /**
  * Quote - one quote from the ZenQuotes API.
  *
