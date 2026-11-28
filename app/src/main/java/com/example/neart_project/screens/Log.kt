@@ -96,8 +96,8 @@ fun LogScreen(
         // Weight - shows an error if it's empty or not above 0
         OutlinedTextField(
             value = weight,
-            onValueChange = {
-                weight = it
+            onValueChange = { // runs on every keystroke
+                weight = it // The current value in the text box
                 showError = false   // hide the error once the user starts typing again
             },
             label = { Text(stringResource(R.string.weight_kg)) },

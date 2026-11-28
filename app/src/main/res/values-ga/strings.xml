@@ -20,4 +20,8 @@
     <string name="reps">Athdhéanaimh</string>
     <string name="update_lift">Nuashonraigh an t-ardú</string>
     <string name="save_lift">Sábháil an t-ardú</string>
+    <string name="rest_timer">Amadóir scíthe</string>
+    <string name="seconds_left">%1$d soicind</string>
+    <string name="rest_over">Tá an scíth thart, am le hardú!</string>
+    <string name="close">Dún</string>
 </resources>

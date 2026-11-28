@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ClaudeCodeEditorTabs">
-    <option name="activeSessionId" value="b33335b5-837a-4f44-91e9-64dd069dbefd" />
+    <option name="activeSessionId" value="cb2e9991-36ed-42d3-a24f-645c2fee5d64" />
     <option name="openSessionIds">
       <list>
         <option value="e72c740a-0b80-436d-80d6-850d59c9d4e1" />
@@ -12,18 +12,7 @@
         <option value="ea35b8fd-2517-4420-b63b-cfd469f24cbe" />
         <option value="e8e0d241-69ad-43e4-8ba7-e6d89c0e168b" />
         <option value="cb2e9991-36ed-42d3-a24f-645c2fee5d64" />
-        <option value="b33335b5-837a-4f44-91e9-64dd069dbefd" />
       </list>
-    </option>
-    <option name="sessionPaths">
-      <map>
-        <entry key="b33335b5-837a-4f44-91e9-64dd069dbefd" value="/sessions/4535f9a5-ef69-497e-9a9b-0a49bc76a7dd" />
-      </map>
-    </option>
-    <option name="sessionTitles">
-      <map>
-        <entry key="b33335b5-837a-4f44-91e9-64dd069dbefd" value="Access and prompt log review" />
-      </map>
     </option>
   </component>
 </project>

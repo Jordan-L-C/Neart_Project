@@ -93,3 +93,15 @@ This document logs user prompts, AI assistant responses, architectural decisions
     5. Text that scales with the user's font size (`sp` typography and a scrollable form)
     6. Minimal typing (dropdowns, chips and a number keyboard)
     7. Clear empty states on the History and Stats screens
+
+---
+
+### Entry 8: Shake to Start Rest Timer (Accelerometer)
+- **User Prompt**: *"Walk me through how to implement a shake to start rest timer, and explain how everything works and ties in with the rest of the app."*
+- **Summary / Resolution**:
+  - Implemented the second technical feature from the design: shaking the phone on any screen starts a rest timer.
+  - **`sensors/ShakeDetector.kt`**: A `SensorEventListener` that combines the accelerometer's x, y and z readings into one g-force value. A reading above `SHAKE_THRESHOLD` (1.8) counts as a shake, with a 1 second cooldown so one shake doesn't trigger multiple times.
+  - **`screens/RestTimerDialog.kt`**: An `AlertDialog` that counts down from 60 seconds using `LaunchedEffect` and `delay(1000)`, then shows a "Rest over" message. The countdown uses large text so it's easy to read from a distance.
+  - **`MainActivity.kt`**: Registers the shake detector with the `SensorManager` using `LifecycleResumeEffect`, so it only listens while the app is on screen and stops in the background to save battery. Shows the rest timer on top of whichever screen is open.
+  - **`strings.xml` / `values-ga/strings.xml`**: Added English and Irish text for the timer.
+  - Can be tested on the emulator using Virtual sensors (Device Pose → Move), as no physical device was available.

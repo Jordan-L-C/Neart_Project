@@ -1,5 +1,8 @@
 package com.example.neart_project
 
+import android.content.Context
+import android.hardware.Sensor
+import android.hardware.SensorManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -17,13 +20,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.neart_project.data.Lift
 import com.example.neart_project.screens.HistoryScreen
 import com.example.neart_project.screens.LogScreen
+import com.example.neart_project.screens.RestTimerDialog
 import com.example.neart_project.screens.StatsScreen
+import com.example.neart_project.sensors.ShakeDetector
 import com.example.neart_project.ui.theme.Neart_ProjectTheme
 import com.example.neart_project.viewmodel.LiftViewModel
 
@@ -64,6 +71,33 @@ fun Neart_ProjectApp() {
     // The lift being edited, or null if adding a new one.
     // Set when a card is tapped on History, then given to the Log screen
     var editingLift by remember { mutableStateOf<Lift?>(null) }
+
+    // Reference: GenAi see prompt(s) (8) in report - shake to start rest timer
+    // Whether the rest timer popup is showing. A shake sets it to true
+    var showRestTimer by remember { mutableStateOf(false) }
+
+    // Listen for shakes while the app is open (on any screen).
+    // LifecycleResumeEffect starts listening when the app is on screen, and stops
+    // (onPauseOrDispose) when it goes to the background, so it doesn't waste battery
+    val context = LocalContext.current
+    LifecycleResumeEffect(Unit) {
+        val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        val accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+        val shakeDetector = ShakeDetector(onShake = { showRestTimer = true })
+
+        // Only listen if the phone actually has an accelerometer
+        if (accelerometer != null) {
+            sensorManager.registerListener(shakeDetector, accelerometer, SensorManager.SENSOR_DELAY_UI)
+        }
+        onPauseOrDispose {
+            sensorManager.unregisterListener(shakeDetector)
+        }
+    }
+
+    // Show the rest timer popup on top of whichever screen is open
+    if (showRestTimer) {
+        RestTimerDialog(onDismiss = { showRestTimer = false })
+    }
 
     // Navigation bar: shows at the bottom on phones, and on the side on bigger screens
     NavigationSuiteScaffold(

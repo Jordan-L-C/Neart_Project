@@ -19,4 +19,8 @@
     <string name="reps">Reps</string>
     <string name="update_lift">Update lift</string>
     <string name="save_lift">Save lift</string>
+    <string name="rest_timer">Rest timer</string>
+    <string name="seconds_left">%1$d seconds</string>
+    <string name="rest_over">Rest over, time to lift!</string>
+    <string name="close">Close</string>
 </resources>
